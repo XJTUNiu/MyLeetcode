@@ -4,13 +4,13 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <unordered_map>
 #include <queue>
 #include <functional>
 using namespace std;
 
 //347
 class Solution2 {
-
 public:
 	vector<int> topKFrequent(vector<int>& nums, int k) {
 		map<int, int> m1;
@@ -25,15 +25,11 @@ public:
 		}
 		struct Freq {
 			int data, freq;
-			Freq(int data, int freq) {
-				this->data = data;
-				this->freq = freq;
-			}
+			Freq(int data, int freq):data(data),freq(freq) {}
 			bool operator<(const Freq& b) const{
 				return this->freq > b.freq;
 			}
 		};
-
 		priority_queue<Freq> q1;
 		map<int, int>::iterator it;
 		for (it = m1.begin(); it != m1.end();it++) {
@@ -53,6 +49,28 @@ public:
 		return v1;
 	}
 };
+
+class Solution {
+public:
+	vector<int> topKFrequent(vector<int>& nums, int k) {
+		unordered_map<int, int> m1;
+		for (int i : nums) {
+			m1[i]++;       //统计<数，频次>
+		}
+		multimap<int,int> m2;
+		for (auto it = m1.begin(); it != m1.end();++it) {
+			m2.insert({it->second,it->first});     //反转储存<频次，数>，自动排序
+		}
+		vector<int> v1;
+		int i = 0;               //输出
+		for (auto it2 = m2.rbegin(); i<k&&it2 != m2.rend(); ++it2) {
+			v1.push_back(it2->second);
+			++i;
+		}
+		return v1;
+	}
+};
+
 
 
 
